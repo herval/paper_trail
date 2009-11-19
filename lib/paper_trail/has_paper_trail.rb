@@ -37,21 +37,23 @@ module PaperTrail
   module InstanceMethods
     def record_create
       versions.create(:event     => 'create',
-                      :whodunnit => PaperTrail.whodunnit) if self.class.paper_trail_active
+                      :whodunnit => PaperTrail.whodunnit, :assumed_user => PaperTrail.assumed_user) if self.class.paper_trail_active
     end
 
     def record_update
       if changed_and_we_care? and self.class.paper_trail_active
         versions.build :event     => 'update',
                        :object    => object_to_string(previous_version),
-                       :whodunnit => PaperTrail.whodunnit
+                       :whodunnit => PaperTrail.whodunnit,
+                       :assumed_user => PaperTrail.assumed_user
       end
     end
 
     def record_destroy
       versions.create(:event     => 'destroy',
                       :object    => object_to_string(previous_version),
-                      :whodunnit => PaperTrail.whodunnit) if self.class.paper_trail_active
+                      :whodunnit => PaperTrail.whodunnit,
+                      :assumed_user => PaperTrail.assumed_user) if self.class.paper_trail_active
     end
 
     private
