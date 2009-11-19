@@ -4,34 +4,34 @@ require 'paper_trail/version'
 
 module PaperTrail
   @@whodunnit = nil
-  @@assumed_user = nil
+  @@super_user = nil
 
   def self.included(base)
     base.before_filter :set_whodunnit
-    base.before_filter :set_assumed_user # if a user has 'assumed' someone else and did something ('A on behalf of B'), this will be filled in (e.g.: Zendesk.com 'assume' functionality)
+    base.before_filter :set_super_user # if a user has 'assumed' someone else and did something ('A on behalf of B'), this will be filled in (e.g.: Zendesk.com 'assume' functionality)
   end
 
   def self.whodunnit
     @@whodunnit.respond_to?(:call) ? @@whodunnit.call : @@whodunnit
   end
   
-  def self.assumed_user
-    @@assumed_user.respond_to?(:call) ? @@assumed_user.call : @@assumed_user
+  def self.super_user
+    @@super_user.respond_to?(:call) ? @@super_user.call : @@super_user
   end
 
   def self.whodunnit=(value)
     @@whodunnit = value
   end
   
-  def self.assumed_user=(value)
-    @@assumed_user = value
+  def self.super_user=(value)
+    @@super_user = value
   end
 
   private
 
-  def set_assumed_user
-    @@assumed_user = lambda {
-      self.respond_to?(:assumed_user) ? self.assumed_user : nil
+  def set_super_user
+    @@super_user = lambda {
+      self.respond_to?(:super_user) ? self.super_user : nil
     }
   end
 
