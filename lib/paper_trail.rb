@@ -4,6 +4,7 @@ require 'paper_trail/version'
 
 module PaperTrail
   @@whodunnit = nil
+  @@assumed_user = nil
 
   def self.included(base)
     base.before_filter :set_whodunnit
